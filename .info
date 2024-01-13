@@ -1,0 +1,40 @@
+DataBase Name: onsalenotification
+Prefix: Wdl
+Club Table: hosting_clubs
+id, name, logo, created_at, updated_at, deleted_at
+
+Event Table: events
+id, club_id, name, date, time, onsale_date, onsale_time, criteria, URL, created_at, updated_at, deleted_at
+
+
+
+setting('admin.notification_per_page');
+Name: Notification Per Page
+Key: notification_per_page
+Type TexBox
+Group: admin
+
+setting('admin.admin_notification_title')
+Name: Notification Page Title
+Key: admin_notification_title
+Type TexBox
+Group: admin
+
+
+DATABase TABLE CHANGES
+
+Permission Table
+insert into permissions values ( null, 'browse_subscribe', 'clubs', now(), now());
+insert into permissions values ( null, 'browse_notification', 'clubs', now(), now());
+insert into permissions values ( null, 'browse_subscribecsv', 'clubs', now(), now());
+
+Setting Table
+insert into settings values ( null, 'admin.notification_per_page', 'Notification Per Page', '10', null, 'text', 6, 'Admin');
+
+
+files changes
+App\Http\Controllers\Voyager\ClubController
+App\Http\Controllers\Voyager\UpCommingSale
+
+App\Models\Club
+App\Models\Event
