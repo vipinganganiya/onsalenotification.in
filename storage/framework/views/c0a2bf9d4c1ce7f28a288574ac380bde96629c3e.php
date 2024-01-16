@@ -1,16 +1,17 @@
-@extends('voyager::master')
-@section('css')
-    <link href="{{ asset('/public/css/event_notification.css') }}" />
-@stop
-@section('page_title','Event Notifications')
-@section('content')
+
+<?php $__env->startSection('css'); ?>
+    <link href="<?php echo e(asset('/public/css/event_notification.css')); ?>" />
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('page_title','Event Notifications'); ?>
+<?php $__env->startSection('content'); ?>
     <div class="container-fluid">
         <div class="row content">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                 <div class="col-sm-6">  
                     <h1 class="page-title">
                         <i class="voyager-star"></i>
-                        {{setting('admin.admin_notification_title')}}
+                        <?php echo e(setting('admin.admin_notification_title')); ?>
+
                     </h1> 
                 </div>
                 <div class="col-sm-6 text-right">  
@@ -21,7 +22,7 @@
             </div>
         </div>
     </div>
-    @include('voyager::alerts')
+    <?php echo $__env->make('voyager::alerts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="page-content browse container-fluid">
         <div class="row"> 
             <!-- Schedule Item 1 -->
@@ -34,24 +35,25 @@
                     <a href="#" class="nav-link" onclick="filter(event, 'past');" id="past">Past</a>
                 </nav> 
                 <div class="table-responsive" id="listingBlocks">
-                @if(($listings) && count($listings) > 0)  
-                    @foreach ($listings as $list)
+                <?php if(($listings) && count($listings) > 0): ?>  
+                    <?php $__currentLoopData = $listings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $list): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="card mb-3 card-body">
                         <div class="row">
                             <div class="col-sm-2">   
-                                @if(!empty($list->club->image))
-                                    <img src="{{Voyager::image($list->getThumbnail($list->club->image, 'cropped'))}}" alt="{{$list->club->title}}" title="{{$list->club->title}}" class="width-90 rounded-3" />
-                                @else 
+                                <?php if(!empty($list->club->image)): ?>
+                                    <img src="<?php echo e(Voyager::image($list->getThumbnail($list->club->image, 'cropped'))); ?>" alt="<?php echo e($list->club->title); ?>" title="<?php echo e($list->club->title); ?>" class="width-90 rounded-3" />
+                                <?php else: ?> 
                                   <img src="https://www.bootdey.com/image/100x80/FFB6C1/000000" alt="Contemporary Club" />
-                                @endif  
+                                <?php endif; ?>  
                             </div>
                             <div class="col-sm-6">
                                 <div class="overflow-hidden flex-nowrap">
-                                    <h6 class="mb-1">{{ $list->title}}</h6> 
-                                    <p><i class="voyager-location"></i> {{$list->club->title}}</p>
+                                    <h6 class="mb-1"><?php echo e($list->title); ?></h6> 
+                                    <p><i class="voyager-location"></i> <?php echo e($list->club->title); ?></p>
                                     <span class="text-muted d-block mb-2 small">
-                                        <i class="glyphicon glyphicon-calendar"></i>  {{ \Carbon\Carbon::parse($list->date)->format('d M Y') }}   
-                                        &nbsp; <i class="glyphicon glyphicon-time"></i> &nbsp;{{ $list->time }}
+                                        <i class="glyphicon glyphicon-calendar"></i>  <?php echo e(\Carbon\Carbon::parse($list->date)->format('d M Y')); ?>   
+                                        &nbsp; <i class="glyphicon glyphicon-time"></i> &nbsp;<?php echo e($list->time); ?>
+
                                     </span>
                                 </div>
                             </div>
@@ -59,44 +61,45 @@
 
                         <div class="row">
                             <div class="col-sm-2 text-text">
-                                <span class="text-criteria"> <i class="glyphicon glyphicon-asterisk yellow"></i> {{ $list->criteria}} </span>
+                                <span class="text-criteria"> <i class="glyphicon glyphicon-asterisk yellow"></i> <?php echo e($list->criteria); ?> </span>
                             </div>
                             <div class="col-sm-3">
                                 <h5 class="pt-3 text-onsale text-600 text-primary-d1 letter-spacing"> 
-                                    {{ \Carbon\Carbon::parse($list->onsale_date)->format('d M Y') }} {{ $list->onsale_time }}
+                                    <?php echo e(\Carbon\Carbon::parse($list->onsale_date)->format('d M Y')); ?> <?php echo e($list->onsale_time); ?>
+
                                 </h5> 
                             </div> 
                             <div class=" col-sm-3"> 
                                 <h4 class="pt-3 text-countdown text-600 text-primary-d1"> 
-                                    <span data-countdown="{{ \Carbon\Carbon::parse($list->onsale_date)->format('Y/m/d')}} {{$list->onsale_time}}"> </span>
+                                    <span data-countdown="<?php echo e(\Carbon\Carbon::parse($list->onsale_date)->format('Y/m/d')); ?> <?php echo e($list->onsale_time); ?>"> </span>
                                 </h4> 
                             </div>
                             <div class="col-sm-4">
-                                @if(!empty($list->URL))
-                                    <a href="{{$list->URL}}" class="f-n-hover btn btn-info btn-raised px-4 py-25 w-75 text-600" target="_blank">Go to Web</a>
-                                 @endif
+                                <?php if(!empty($list->URL)): ?>
+                                    <a href="<?php echo e($list->URL); ?>" class="f-n-hover btn btn-info btn-raised px-4 py-25 w-75 text-600" target="_blank">Go to Web</a>
+                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>  
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <div class="col-md-12">
                         <div class="text-center">
                             <button id="load_more_button" disabled="disabled" onclick="filter(event, 'onLoadData', 2)" class="btn btn-primary" style="background: #a2caee !important">Load More</button>
                         </div>
                     </div>
-                @else 
+                <?php else: ?> 
                     <div class="card mb-3 card-body">
                         <div class="timetable-item norecord-found">
                             <span>No Record Found</span>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
                 </div>
 
 
             </div> 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                <input type="hidden" name="dateRoute" value="{{ route('notification/dateFilter'); }}" id="dateRoute" />
+                <input type="hidden" name="dateRoute" value="<?php echo e(route('notification/dateFilter')); ?>" id="dateRoute" />
                 <div id="j_weeklyCalendar" class="myWeeklyCalendarJ">
                     <div class="text-center">
                         <div class="month">
@@ -143,10 +146,10 @@
             </div>  
         </div>
     </div>
-@stop 
+<?php $__env->stopSection(); ?> 
 
-@section('javascript')  
-    <script src="{{ asset('/public/js/weeklyCalendar.js') }}"></script> 
+<?php $__env->startSection('javascript'); ?>  
+    <script src="<?php echo e(asset('/public/js/weeklyCalendar.js')); ?>"></script> 
     <script src="https://cdn.jsdelivr.net/gh/hilios/jQuery.countdown@2.2.0/dist/jquery.countdown.min.js"></script> 
     <script> 
         $.ajaxSetup({
@@ -175,14 +178,14 @@
             }    
 
             var type = "GET";
-            var ajaxurl = "{{ route('notification/filter'); }}"; 
-            //var loding_url = "{{ asset('/resources/css/voyager-assets.png') }}";
+            var ajaxurl = "<?php echo e(route('notification/filter')); ?>"; 
+            //var loding_url = "<?php echo e(asset('/resources/css/voyager-assets.png')); ?>";
             var loding_url = 'https://adddepot.co/admin/voyager-assets?path=images%2Flogo-icon.png';
 
             $.ajax({
                 type: type,
                 url: ajaxurl+'?page='+start,
-                data: {filter: fname, _token: '{{csrf_token()}}' },
+                data: {filter: fname, _token: '<?php echo e(csrf_token()); ?>' },
                 dataType: 'json',
                 beforeSend: function() {
                     $('#'+fname).attr('disabled', true);
@@ -275,4 +278,5 @@
         
         countDownCall();  
     </script>
-@stop
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('voyager::master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/adddepot/public_html/resources/views//vendor/voyager/notification/browse.blade.php ENDPATH**/ ?>

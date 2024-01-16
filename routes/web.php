@@ -41,7 +41,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('notification/filter','App\Http\Controllers\Voyager\UpComingSale@filterUpcommingSale')->name('notification/filter');
     /*Notification Date Filters*/
     Route::get('notification/dateFilter','App\Http\Controllers\Voyager\UpComingSale@filterDate')->name('notification/dateFilter');
-
+    
+    /*Bot Mgt*/
+    Route::get('overview','App\Http\Controllers\Voyager\BotOverviewController@index')->name('overview')->middleware('voyagerAuth:subscribe'); 
+    Route::get('overview/socket','App\Http\Controllers\Voyager\BotOverviewController@socket')->name('overview.socket');
+    
     /*Import OnSaleNotificationData*/
     //Route::post('notification/import','App\Http\Controllers\Admin\UpCommingSale@importOnSaleNotification')->name('notification/import');
     /*Export OnSaleNotificationData*/
