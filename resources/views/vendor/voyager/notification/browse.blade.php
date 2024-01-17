@@ -1,6 +1,6 @@
 @extends('voyager::master')
 @section('css')
-    <link href="{{ asset('/public/css/event_notification.css') }}" />
+    <!--<link href="{{ asset('/css/event_notification.css') }}" />-->
 @stop
 @section('page_title','Event Notifications')
 @section('content')
@@ -146,7 +146,7 @@
 @stop 
 
 @section('javascript')  
-    <script src="{{ asset('/public/js/weeklyCalendar.js') }}"></script> 
+    <script src="{{ asset('/js/weeklyCalendar.js') }}"></script> 
     <script src="https://cdn.jsdelivr.net/gh/hilios/jQuery.countdown@2.2.0/dist/jquery.countdown.min.js"></script> 
     <script> 
         $.ajaxSetup({

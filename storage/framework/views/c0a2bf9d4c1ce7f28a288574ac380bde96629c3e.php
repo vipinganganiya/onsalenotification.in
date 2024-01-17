@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('css'); ?>
-    <link href="<?php echo e(asset('/public/css/event_notification.css')); ?>" />
+    <!--<link href="<?php echo e(asset('/css/event_notification.css')); ?>" />-->
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page_title','Event Notifications'); ?>
 <?php $__env->startSection('content'); ?>
@@ -149,7 +149,7 @@
 <?php $__env->stopSection(); ?> 
 
 <?php $__env->startSection('javascript'); ?>  
-    <script src="<?php echo e(asset('/public/js/weeklyCalendar.js')); ?>"></script> 
+    <script src="<?php echo e(asset('/js/weeklyCalendar.js')); ?>"></script> 
     <script src="https://cdn.jsdelivr.net/gh/hilios/jQuery.countdown@2.2.0/dist/jquery.countdown.min.js"></script> 
     <script> 
         $.ajaxSetup({
