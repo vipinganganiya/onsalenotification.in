@@ -7,13 +7,6 @@
         <h1 class="page-title">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
-        @can('add', app($dataType->model_name))
-            <!-- {{ route('voyager.'.$dataType->slug.'.create') }} -->
-            <a href="#" class="btn btn-success btn-add-new text-right" onclick="addProfile();">
-                <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
-            </a>
-            <button type="button" class="btn btn-info btn-lg" id="config_btn"> <i class="voyager-settings"></i> Config</button>
-        @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -40,11 +33,26 @@
 
 @section('content')
     <div class="page-content browse container-fluid">
+
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body" style="overflow: visible;">
+                        <div class="container-fluid" style="background: white !important;">
+                            <div class="pull-right d-flex">
+                                @can('add', app($dataType->model_name))
+                                    <!-- {{ route('voyager.'.$dataType->slug.'.create') }} -->
+                                    <button class="btn-add-profile" data-toggle="modal" onclick="addProfile();">
+                                        <i class="voyager-plus"></i> {{ __('voyager::generic.add_new') }}
+                                    </button>
+                                    <button class="btn-config-profile" data-toggle="modal" data-target="#config_modal">
+                                        <i class="voyager-settings"></i> Config
+                                    </button>
+                                @endcan
+                            </div>
+                        </div>
+                        <br />
                         @if ($isServerSide)
                             <form method="get" class="form-search">
                                 <div id="search-input">
@@ -312,7 +320,7 @@
     </div>
 
     {{-- Config Model --}}
-    <div class="modal fade modal-info in" id="configInfo">
+    <div class="modal fade modal-info in" id="config_modal">
         <div class="modal-dialog" style="width: 90%;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -358,6 +366,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    {{-- Config Model --}}
+    <div class="modal fade modal-info event_detail_modal in" id="loadData">
+
     </div>
 
     {{-- Single delete modal --}}
@@ -473,8 +486,39 @@
         });
 
         function addProfile() {
-            var url = "{{ route('voyager.'.$dataType->slug.'.create') }}";
+            $.ajax({
+                url: @json(route('voyager.'.$dataType->slug.'.create') ),
+                type: "get",
+                success: function(res) {
+                   console.log(res);
+                   $("#loadData").html(res);
+                   $('#loadData').modal('show');
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
+        }
+        function loadThread(url) {
             console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function(res) {
+                   console.log(res);
+                   $("#loadData").html(res);
+                   $('#loadData').modal('show');
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
         }
     </script>
 @stop

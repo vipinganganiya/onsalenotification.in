@@ -6,13 +6,6 @@
             <i class="<?php echo e($dataType->icon); ?>"></i> <?php echo e($dataType->getTranslatedAttribute('display_name_plural')); ?>
 
         </h1>
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('add', app($dataType->model_name))): ?>
-            <!-- <?php echo e(route('voyager.'.$dataType->slug.'.create')); ?> -->
-            <a href="#" class="btn btn-success btn-add-new text-right" onclick="addProfile();">
-                <i class="voyager-plus"></i> <span><?php echo e(__('voyager::generic.add_new')); ?></span>
-            </a>
-            <button type="button" class="btn btn-info btn-lg" id="config_btn"> <i class="voyager-settings"></i> Config</button>
-        <?php endif; ?>
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete', app($dataType->model_name))): ?>
             <?php echo $__env->make('voyager::partials.bulk-delete', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <?php endif; ?>
@@ -39,11 +32,27 @@
 
 <?php $__env->startSection('content'); ?>
     <div class="page-content browse container-fluid">
+
         <?php echo $__env->make('voyager::alerts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body" style="overflow: visible;">
+                        <div class="container-fluid" style="background: white !important;">
+                            <div class="pull-right d-flex">
+                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('add', app($dataType->model_name))): ?>
+                                    <!-- <?php echo e(route('voyager.'.$dataType->slug.'.create')); ?> -->
+                                    <button class="btn-add-profile" data-toggle="modal" onclick="addProfile();">
+                                        <i class="voyager-plus"></i> <?php echo e(__('voyager::generic.add_new')); ?>
+
+                                    </button>
+                                    <button class="btn-config-profile" data-toggle="modal" data-target="#config_modal">
+                                        <i class="voyager-settings"></i> Config
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <br />
                         <?php if($isServerSide): ?>
                             <form method="get" class="form-search">
                                 <div id="search-input">
@@ -328,7 +337,7 @@
     </div>
 
     
-    <div class="modal fade modal-info in" id="configInfo">
+    <div class="modal fade modal-info in" id="config_modal">
         <div class="modal-dialog" style="width: 90%;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -374,6 +383,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    
+    <div class="modal fade modal-info event_detail_modal in" id="loadData">
+
     </div>
 
     
@@ -491,8 +505,39 @@
         });
 
         function addProfile() {
-            var url = "<?php echo e(route('voyager.'.$dataType->slug.'.create')); ?>";
+            $.ajax({
+                url: <?php echo json_encode(route('voyager.'.$dataType->slug.'.create') , 15, 512) ?>,
+                type: "get",
+                success: function(res) {
+                   console.log(res);
+                   $("#loadData").html(res);
+                   $('#loadData').modal('show');
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
+        }
+        function loadThread(url) {
             console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function(res) {
+                   console.log(res);
+                   $("#loadData").html(res);
+                   $('#loadData').modal('show');
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
         }
     </script>
 <?php $__env->stopSection(); ?>

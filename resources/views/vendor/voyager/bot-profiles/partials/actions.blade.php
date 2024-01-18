@@ -6,9 +6,19 @@
     @endphp
     @can ($action->getPolicy(), $data)
         @if ($action->shouldActionDisplayOnRow($data))
-            <a href="{{ $action->getRoute($dataType->name) }}" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!}>
-                <i class="{{ $action->getIcon() }}"></i> <span class="hidden-xs hidden-sm">{{ $action->getTitle() }}</span>
-            </a>
+            @if($action->getTitle() == "View")
+                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('{{ $action->getRoute($dataType->name) }}');">
+                    <i class="{{ $action->getIcon() }}"></i> 
+                    <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
+                    </span>
+                </a>
+            @else
+                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('{{ $action->getRoute($dataType->name) }}')">
+                    <i class="{{ $action->getIcon() }}"></i> 
+                    <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
+                    </span>
+                </a>
+            @endif
         @endif
     @endcan
 @elseif (method_exists($action, 'massAction'))

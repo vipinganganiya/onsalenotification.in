@@ -604,7 +604,21 @@ li.optgroup > span.label {
 .market-insights .card-title {
     font-size: 16px;
 }
-.btn-approved-events {
+.btn-add-profile {
+    color: white;
+    font-size: .8125rem;
+    background-color: #41007f;
+    font-family: Open Sans,sans-serif;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 1.428571429;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    margin-left: 10px;
+}
+.btn-config-profile {
     color: white;
     font-size: .8125rem;
     background-color: #41007f;
