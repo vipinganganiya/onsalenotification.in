@@ -89,8 +89,7 @@ html {
     font-weight: 400;
 }
 
-#quote_builder_modal .select2-container--default .select2-selection--single,
-#add_approved_event_modal .select2-container--default .select2-selection--single {
+#loadData .select2-container--default .select2-selection--single {
     border: 1px solid #e4eaec;
 }
 #update_listing_modal .select2-container--default .select2-selection--single {

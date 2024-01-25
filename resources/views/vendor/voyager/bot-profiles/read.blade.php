@@ -8,8 +8,8 @@
                 <div class="pull-left">
                     <h4 class="modal-title">
                         <i class="{{ $dataType->icon }}"></i> 
-                        {{ __('voyager::generic.viewing') }} 
-                        {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }} &nbsp; for: {{ $data->profile_name }}
+                        {{ __('voyager::generic.viewing') }}: {{ $data->profile_name }}
+                        <!-- {{ ucfirst($dataType->getTranslatedAttribute('display_name_singular')) }}  -->
                     </h4>
                     @can('browse', $dataTypeContent)
                         <!-- <a href="{{ route('voyager.'.$dataType->slug.'.index') }}" class="btn btn-warning">

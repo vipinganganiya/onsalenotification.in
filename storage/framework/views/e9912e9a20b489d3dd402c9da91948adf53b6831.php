@@ -8,9 +8,9 @@
                 <div class="pull-left">
                     <h4 class="modal-title">
                         <i class="<?php echo e($dataType->icon); ?>"></i> 
-                        <?php echo e(__('voyager::generic.viewing')); ?> 
-                        <?php echo e(ucfirst($dataType->getTranslatedAttribute('display_name_singular'))); ?> &nbsp; for: <?php echo e($data->profile_name); ?>
+                        <?php echo e(__('voyager::generic.viewing')); ?>: <?php echo e($data->profile_name); ?>
 
+                        <!-- <?php echo e(ucfirst($dataType->getTranslatedAttribute('display_name_singular'))); ?>  -->
                     </h4>
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('browse', $dataTypeContent)): ?>
                         <!-- <a href="<?php echo e(route('voyager.'.$dataType->slug.'.index')); ?>" class="btn btn-warning">

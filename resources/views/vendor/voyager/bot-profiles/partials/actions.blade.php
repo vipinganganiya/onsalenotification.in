@@ -3,24 +3,30 @@
         // need to recreate object because policy might depend on record data
         $class = get_class($action);
         $action = new $class($dataType, $data);
-    @endphp
+    @endphp 
     @can ($action->getPolicy(), $data)
         @if ($action->shouldActionDisplayOnRow($data))
             @if($action->getTitle() == "View")
-                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('bot-profiles/read/{{ $data->id }} }}');">
+               <!--  <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('bot-profiles/read/{{ $data->id }}');">
                     <i class="{{ $action->getIcon() }}"></i> 
-                    <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
                     </span>
-                </a>
+                </a> -->
+                    <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
+                <span class="icon-stats">
+                    <span title="{{ $action->getTitle() }}"  onclick="loadThread('bot-profiles/read/{{ $data->id }}');">
+                        <i class="{{ $action->getIcon() }}"></i> 
+                    </span> 
+                </span>
             @else
-                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('{{ $action->getRoute($dataType->name) }}')">
-                    <i class="{{ $action->getIcon() }}"></i> 
-                    <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
-                    </span>
-                </a>
-            @endif
+                <span class="icon-stats">
+                    <span  title="{{ $action->getTitle() }}" onclick="loadThread('{{ $action->getRoute($dataType->name) }}')">
+                        <i class="{{ $action->getIcon() }}"></i> 
+                    </span> 
+                </span> 
+            @endif  
+            </span>
         @endif
-    @endcan
+    @endcan 
 @elseif (method_exists($action, 'massAction'))
     <form method="post" action="{{ route('voyager.'.$dataType->slug.'.action') }}" style="display:inline">
         {{ csrf_field() }}

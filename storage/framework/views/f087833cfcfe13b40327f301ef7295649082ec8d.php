@@ -386,7 +386,7 @@
     </div>
 
     
-    <div class="modal fade modal-info event_detail_modal in" id="loadData">
+    <div class="modal fade modal-info event_detail_modal in" id="loadData" style="padding-right: 17px;">
 
     </div>
 

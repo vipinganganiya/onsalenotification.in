@@ -15,7 +15,8 @@
                 ?>
 
                 <?php if(isset($query)): ?>
-                    <p><?php echo e($query->{$options->label}); ?></p>
+                   <?php echo e($query->{$options->label}); ?>
+
                 <?php else: ?>
                     <p><?php echo e(__('voyager::generic.no_results')); ?></p>
                 <?php endif; ?>
@@ -204,4 +205,4 @@
     <?php endif; ?>
 
 <?php endif; ?>
-<?php /**PATH /home/adddepot/public_html/vendor/tcg/voyager/src/../resources/views/formfields/relationship.blade.php ENDPATH**/ ?>
+<?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/formfields/relationship.blade.php ENDPATH**/ ?>

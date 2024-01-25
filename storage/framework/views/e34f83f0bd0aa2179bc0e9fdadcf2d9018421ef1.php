@@ -3,24 +3,30 @@
         // need to recreate object because policy might depend on record data
         $class = get_class($action);
         $action = new $class($dataType, $data);
-    ?>
+    ?> 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($action->getPolicy(), $data)): ?>
         <?php if($action->shouldActionDisplayOnRow($data)): ?>
             <?php if($action->getTitle() == "View"): ?>
-                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?> }}');">
+               <!--  <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?>');">
                     <i class="<?php echo e($action->getIcon()); ?>"></i> 
-                    <!-- <span class="hidden-xs hidden-sm"><?php echo e($action->getTitle()); ?> -->
                     </span>
-                </a>
+                </a> -->
+                    <!-- <span class="hidden-xs hidden-sm"><?php echo e($action->getTitle()); ?> -->
+                <span class="icon-stats">
+                    <span title="<?php echo e($action->getTitle()); ?>"  onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?>');">
+                        <i class="<?php echo e($action->getIcon()); ?>"></i> 
+                    </span> 
+                </span>
             <?php else: ?>
-                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('<?php echo e($action->getRoute($dataType->name)); ?>')">
-                    <i class="<?php echo e($action->getIcon()); ?>"></i> 
-                    <!-- <span class="hidden-xs hidden-sm"><?php echo e($action->getTitle()); ?> -->
-                    </span>
-                </a>
-            <?php endif; ?>
+                <span class="icon-stats">
+                    <span  title="<?php echo e($action->getTitle()); ?>" onclick="loadThread('<?php echo e($action->getRoute($dataType->name)); ?>')">
+                        <i class="<?php echo e($action->getIcon()); ?>"></i> 
+                    </span> 
+                </span> 
+            <?php endif; ?>  
+            </span>
         <?php endif; ?>
-    <?php endif; ?>
+    <?php endif; ?> 
 <?php elseif(method_exists($action, 'massAction')): ?>
     <form method="post" action="<?php echo e(route('voyager.'.$dataType->slug.'.action')); ?>" style="display:inline">
         <?php echo e(csrf_field()); ?>
