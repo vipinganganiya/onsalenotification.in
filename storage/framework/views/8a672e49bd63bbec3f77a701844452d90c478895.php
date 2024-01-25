@@ -1,26 +1,39 @@
+<?php $__env->startSection('page_title', __('voyager::generic.view').' '.$dataType->getTranslatedAttribute('display_name_singular')); ?>
 
+<?php $__env->startSection('page_header'); ?>
+    <h1 class="page-title">
+        <i class="<?php echo e($dataType->icon); ?>"></i> <?php echo e(__('voyager::generic.viewing')); ?> <?php echo e(ucfirst($dataType->getTranslatedAttribute('display_name_singular'))); ?> &nbsp;
 
-<div class="modal-dialog" style="width: 90%;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <div class="container-fluid" style="background: #09b109 !important;">
-                <div class="pull-left">
-                    <h4 class="modal-title">
-                        <i class="<?php echo e($dataType->icon); ?>"></i> 
-                        <?php echo e(__('voyager::generic.viewing')); ?> 
-                        <?php echo e(ucfirst($dataType->getTranslatedAttribute('display_name_singular'))); ?> &nbsp;
-                    </h4>
-                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('browse', $dataTypeContent)): ?>
-                        <a href="<?php echo e(route('voyager.'.$dataType->slug.'.index')); ?>" class="btn btn-warning">
-                            <i class="glyphicon glyphicon-list"></i> <span class="hidden-xs hidden-sm"><?php echo e(__('voyager::generic.return_to_list')); ?></span>
-                        </a>
-                    <?php endif; ?>  
-                </div>
-            </div>
-        </div>
-        <div class="modal-body">
-            <div class="table-responsive">
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit', $dataTypeContent)): ?>
+            <a href="<?php echo e(route('voyager.'.$dataType->slug.'.edit', $dataTypeContent->getKey())); ?>" class="btn btn-info">
+                <i class="glyphicon glyphicon-pencil"></i> <span class="hidden-xs hidden-sm"><?php echo e(__('voyager::generic.edit')); ?></span>
+            </a>
+        <?php endif; ?>
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete', $dataTypeContent)): ?>
+            <?php if($isSoftDeleted): ?>
+                <a href="<?php echo e(route('voyager.'.$dataType->slug.'.restore', $dataTypeContent->getKey())); ?>" title="<?php echo e(__('voyager::generic.restore')); ?>" class="btn btn-default restore" data-id="<?php echo e($dataTypeContent->getKey()); ?>" id="restore-<?php echo e($dataTypeContent->getKey()); ?>">
+                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm"><?php echo e(__('voyager::generic.restore')); ?></span>
+                </a>
+            <?php else: ?>
+                <a href="javascript:;" title="<?php echo e(__('voyager::generic.delete')); ?>" class="btn btn-danger delete" data-id="<?php echo e($dataTypeContent->getKey()); ?>" id="delete-<?php echo e($dataTypeContent->getKey()); ?>">
+                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm"><?php echo e(__('voyager::generic.delete')); ?></span>
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('browse', $dataTypeContent)): ?>
+        <a href="<?php echo e(route('voyager.'.$dataType->slug.'.index')); ?>" class="btn btn-warning">
+            <i class="glyphicon glyphicon-list"></i> <span class="hidden-xs hidden-sm"><?php echo e(__('voyager::generic.return_to_list')); ?></span>
+        </a>
+        <?php endif; ?>
+    </h1>
+    <?php echo $__env->make('voyager::multilingual.language-selector', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <div class="page-content read container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
                 <div class="panel panel-bordered" style="padding-bottom:5px;">
                     <!-- form start -->
                     <?php $__currentLoopData = $dataType->readRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -133,8 +146,58 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-danger view quote_cancel_btn" data-dismiss="modal">Close</button>
-        </div>
     </div>
-</div><?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/read.blade.php ENDPATH**/ ?>
+
+    
+    <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="<?php echo e(__('voyager::generic.close')); ?>"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> <?php echo e(__('voyager::generic.delete_question')); ?> <?php echo e(strtolower($dataType->getTranslatedAttribute('display_name_singular'))); ?>?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="<?php echo e(route('voyager.'.$dataType->slug.'.index')); ?>" id="delete_form" method="POST">
+                        <?php echo e(method_field('DELETE')); ?>
+
+                        <?php echo e(csrf_field()); ?>
+
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm"
+                               value="<?php echo e(__('voyager::generic.delete_confirm')); ?> <?php echo e(strtolower($dataType->getTranslatedAttribute('display_name_singular'))); ?>">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal"><?php echo e(__('voyager::generic.cancel')); ?></button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('javascript'); ?>
+    <?php if($isModelTranslatable): ?>
+        <script>
+            $(document).ready(function () {
+                $('.side-body').multilingual();
+            });
+        </script>
+    <?php endif; ?>
+    <script>
+        var deleteFormAction;
+        $('.delete').on('click', function (e) {
+            var form = $('#delete_form')[0];
+
+            if (!deleteFormAction) {
+                // Save form action initial value
+                deleteFormAction = form.action;
+            }
+
+            form.action = deleteFormAction.match(/\/[0-9]+$/)
+                ? deleteFormAction.replace(/([0-9]+$)/, $(this).data('id'))
+                : deleteFormAction + '/' + $(this).data('id');
+
+            $('#delete_modal').modal('show');
+        });
+
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('voyager::master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/adddepot/public_html/vendor/tcg/voyager/src/../resources/views/bread/read.blade.php ENDPATH**/ ?>

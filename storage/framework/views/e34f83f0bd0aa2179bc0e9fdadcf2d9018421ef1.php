@@ -7,7 +7,7 @@
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($action->getPolicy(), $data)): ?>
         <?php if($action->shouldActionDisplayOnRow($data)): ?>
             <?php if($action->getTitle() == "View"): ?>
-                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('<?php echo e($action->getRoute($dataType->name)); ?>');">
+                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?> }}');">
                     <i class="<?php echo e($action->getIcon()); ?>"></i> 
                     <!-- <span class="hidden-xs hidden-sm"><?php echo e($action->getTitle()); ?> -->
                     </span>

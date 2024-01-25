@@ -26,19 +26,23 @@ class BotProfile extends Model
         'event_url',
     ];
 
-    public function club() { 
-        return $this->hasOne(BotClub::class, 'id', 'club_id');
-    }
-
-    public function login() { 
-        return $this->hasOne(BotLogin::class, 'id', 'proxy_id');
-    }
-
-    public function machine() { 
-        return $this->hasOne(BotMachine::class, 'id', 'mac_id');
-    }
-
-    public function proxy() { 
-        return $this->hasOne(BotProxy::class, 'id', 'proxy_id');
+        public function club() { 
+            return $this->hasOne(BotClub::class, 'id', 'club_id');
+        }
+    
+        public function login() { 
+            return $this->hasOne(BotLogin::class, 'id', 'proxy_id');
+        }
+    
+        public function machine() { 
+            return $this->hasOne(BotMachine::class, 'id', 'mac_id');
+        }
+    
+        public function proxy() { 
+            return $this->hasOne(BotProxy::class, 'id', 'proxy_id');
+        }
+    
+    public function thread() { 
+        return $this->hasMany(BotThread::class, 'profile_id', 'id');
     }
 }

@@ -1,21 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Voyager;
 
-class BotProfileController extends \TCG\Voyager\Http\Controllers\VoyagerBaseController
+use DB;
+use TCG\Voyager\Http\Controllers\VoyagerBaseController;
+use Illuminate\Http\Request;
+use App\Models\BotProfile;
+use App\Models\BotThread;
+use TCG\Voyager\Facades\Voyager;
+
+class BotProfileController extends VoyagerBaseController
 {
-    //***************************************
-    //                _____
-    //               |  __ \
-    //               | |__) |
-    //               |  _  /
-    //               | | \ \
-    //               |_|  \_\
-    //
-    //  Read an item of our Data Type B(R)EAD
-    //
-    //****************************************
-
     /**
      * Create BREAD.
      *
@@ -125,5 +120,78 @@ class BotProfileController extends \TCG\Voyager\Http\Controllers\VoyagerBaseCont
         }
 
         return Voyager::view('voyager::tools.bread.edit-add', compact('dataType', 'fieldOptions', 'isModelTranslatable', 'tables', 'dataTypeRelationships', 'scopes'));
+    }
+    
+    //***************************************
+    //                _____
+    //               |  __ \
+    //               | |__) |
+    //               |  _  /
+    //               | | \ \
+    //               |_|  \_\
+    //
+    //  Read an item of our Data Type B(R)EAD
+    //
+    //****************************************
+    public function readProfile(Request $request, $id)
+    {
+
+        // GET THE SLUG, ex. 'posts', 'pages', etc.
+        $get_route = str_replace('voyager.', '', $request->route()->getName());
+        $get_route = str_replace('.filterBySource', '', $get_route);
+ 
+        if ($get_route == 'bot-profiles.read') {
+            $slug = 'bot-profiles'; 
+        } else {
+            $slug = $this->getSlug($request);
+        }
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        $isSoftDeleted = false;
+
+        if (strlen($dataType->model_name) != 0) {
+            $model = app($dataType->model_name);
+            $query = $model->query();
+
+            // Use withTrashed() if model uses SoftDeletes and if toggle is selected
+            if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
+                $query = $query->withTrashed();
+            }
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+                $query = $query->{$dataType->scope}();
+            }
+            $dataTypeContent = call_user_func([$query, 'findOrFail'], $id);
+            if ($dataTypeContent->deleted_at) {
+                $isSoftDeleted = true;
+            }
+        } else {
+            // If Model doest exist, get data from table name
+            $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
+        }
+
+        // Replace relationships' keys for labels and create READ links if a slug is provided.
+        $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
+
+        // If a column has a relationship associated with it, we do not want to show that field
+        $this->removeRelationshipField($dataType, 'read');
+
+        // Check permission
+        $this->authorize('read', $dataTypeContent);
+
+        // Check if BREAD is Translatable
+        $isModelTranslatable = is_bread_translatable($dataTypeContent);
+
+        // Eagerload Relations
+        $this->eagerLoadRelations($dataTypeContent, $dataType, 'read', $isModelTranslatable); 
+
+        $data = BotProfile::with('thread')->find($id); 
+
+        //dd($data, $data->thread);
+
+        return view('/vendor/voyager/bot-profiles/read', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'data'));
+                    //->render();
+
+        return response()->json(array('html'=> $view), 200); 
     }
 }

@@ -7,7 +7,7 @@
     @can ($action->getPolicy(), $data)
         @if ($action->shouldActionDisplayOnRow($data))
             @if($action->getTitle() == "View")
-                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('{{ $action->getRoute($dataType->name) }}');">
+                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('bot-profiles/read/{{ $data->id }} }}');">
                     <i class="{{ $action->getIcon() }}"></i> 
                     <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
                     </span>
