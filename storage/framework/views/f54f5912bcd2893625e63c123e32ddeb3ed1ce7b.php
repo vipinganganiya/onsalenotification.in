@@ -99,7 +99,7 @@
 
             </div><!-- panel-body -->
 
-            <div class="panel-footer">
+            <div class="panel-footer" style="text-align:right">
                 <?php $__env->startSection('submit-buttons'); ?>
                     <button type="submit" class="btn btn-primary save"><?php echo e(__('voyager::generic.save')); ?></button>
                 <?php $__env->stopSection(); ?>
@@ -117,4 +117,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="http://onsalenotification.in/admin/voyager-assets?path=js%2Fapp.js"></script><?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/edit-add.blade.php ENDPATH**/ ?>
+<script type="text/javascript" src="https://adddepot.co/admin/voyager-assets?path=js%2Fapp.js"></script><?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/edit-add.blade.php ENDPATH**/ ?>

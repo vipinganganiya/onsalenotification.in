@@ -246,20 +246,28 @@ i {
     color: #00e300;
 }
 .flexbox-item-event-name {
-    flex: 0 0 25%;
+    flex: 0 0 15%;
     padding-left: 5px;
 }
 .flexbox-item-machine {
-    flex: 0 0 25%;
+    flex: 0 0 15%;
     padding-left: 5px;
 }
 .flexbox-item-clubs {
-    flex: 0 0 22%;
+    flex: 0 0 15%;
+    padding-left: 5px;
+}
+.flexbox-item-thread-input {
+    flex: 0 0 5%;
+    padding-left: 5px;
+}
+.flexbox-item-running-threads {
+    flex: 0 0 5%;
     padding-left: 5px;
 }
 
 .flexbox-item-action {
-    flex: 0 0 25%;
+    flex: 0 0 30%;
     padding-left: 5px;
 }
 .flexbox-item:first-child {
@@ -603,7 +611,7 @@ li.optgroup > span.label {
 .market-insights .card-title {
     font-size: 16px;
 }
-.btn-add-profile {
+.btn-add-profile, .btn-add-machine, .btn-add-club, .btn-add-login {
     color: white;
     font-size: .8125rem;
     background-color: #41007f;
@@ -616,7 +624,7 @@ li.optgroup > span.label {
     margin-bottom: 0;
     padding: 6px 12px;
     margin-left: 10px;
-}
+} 
 .btn-config-profile {
     color: white;
     font-size: .8125rem;
@@ -661,8 +669,8 @@ li.optgroup > span.label {
     margin-right: 25px;
 }
 .master-table {
-    border: 2px solid gray;
-    width: 100px;
+/*    border: 2px solid gray;*/
+    width: 120px;
     height: 100px;
     display: inline-block;
     text-align: center;
@@ -671,4 +679,7 @@ li.optgroup > span.label {
 }
 .voyager .card {
     box-shadow: 0 0 0;
+}
+.ml {
+    margin-left: 5px;
 }

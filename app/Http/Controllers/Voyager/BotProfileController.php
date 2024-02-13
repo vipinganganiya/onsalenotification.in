@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Voyager;
 
 use DB;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
+use App\Http\Controllers\Controller;
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\Request;
 use App\Models\BotProfile;
 use App\Models\BotThread;
-use TCG\Voyager\Facades\Voyager;
 
 class BotProfileController extends VoyagerBaseController
 {
@@ -121,7 +122,7 @@ class BotProfileController extends VoyagerBaseController
 
         return Voyager::view('voyager::tools.bread.edit-add', compact('dataType', 'fieldOptions', 'isModelTranslatable', 'tables', 'dataTypeRelationships', 'scopes'));
     }
-    
+
     //***************************************
     //                _____
     //               |  __ \
@@ -193,5 +194,33 @@ class BotProfileController extends VoyagerBaseController
                     //->render();
 
         return response()->json(array('html'=> $view), 200); 
+    }
+
+    public function startMachine(Request $request) {
+        //dd($request, $request->thread_input); 
+        
+        $profile = BotProfile::where('id', $request->id)->first();
+        $profile->status = 1;
+        $profile->thread_input = $request->thread_input;
+        $profile->save();  
+
+        return response()->json(['success' => true, 'type'=>'start',  'id' => $request->id, 'thread_input' => $request->thread_input, 'msg' => " `$profile->profile_name` Machine is successfully started!"]);
+
+
+        //dd($request->thread_input, $bot_profile);
+    }
+
+    public function stopMachine(Request $request) {
+        //dd($request, $request->thread_input); 
+        
+        $profile = BotProfile::where('id', $request->id)->first();
+        $profile->status = 0;
+        //$profile->thread_input = $request->thread_input;
+        $profile->save();  
+
+        return response()->json(['success' => true, 'type'=>'stop', 'id' => $request->id, 'msg' => " `$profile->profile_name` Machine is successfully stopped!"]);
+
+
+        //dd($request->thread_input, $bot_profile);
     }
 }

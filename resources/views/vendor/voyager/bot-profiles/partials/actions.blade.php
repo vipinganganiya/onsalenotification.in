@@ -7,22 +7,26 @@
     @can ($action->getPolicy(), $data)
         @if ($action->shouldActionDisplayOnRow($data))
             @if($action->getTitle() == "View")
-               <!--  <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="loadThread('bot-profiles/read/{{ $data->id }}');">
+                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="editProfile('bot-profiles/read/{{ $data->id }}',  );">
                     <i class="{{ $action->getIcon() }}"></i> 
                     </span>
-                </a> -->
+                </a>
                     <!-- <span class="hidden-xs hidden-sm">{{ $action->getTitle() }} -->
-                <span class="icon-stats">
+                <!-- <span class="icon-stats">
                     <span title="{{ $action->getTitle() }}"  onclick="loadThread('bot-profiles/read/{{ $data->id }}');">
                         <i class="{{ $action->getIcon() }}"></i> 
                     </span> 
-                </span>
+                </span> -->
             @else
-                <span class="icon-stats">
+                <a href="#" title="{{ $action->getTitle() }}" {!! $action->convertAttributesToHtml() !!} onclick="editProfile('{{ $action->getRoute($dataType->name) }}', '{{$data->id}}')">
+                    <i class="{{ $action->getIcon() }}"></i> 
+                    </span>
+                </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <!-- <span class="icon-stats">
                     <span  title="{{ $action->getTitle() }}" onclick="loadThread('{{ $action->getRoute($dataType->name) }}')">
                         <i class="{{ $action->getIcon() }}"></i> 
-                    </span> 
-                </span> 
+                    </span>  
+                </span> --> 
             @endif  
             </span>
         @endif

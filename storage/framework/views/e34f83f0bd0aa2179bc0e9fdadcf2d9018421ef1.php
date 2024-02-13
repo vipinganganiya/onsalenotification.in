@@ -7,22 +7,26 @@
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check($action->getPolicy(), $data)): ?>
         <?php if($action->shouldActionDisplayOnRow($data)): ?>
             <?php if($action->getTitle() == "View"): ?>
-               <!--  <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?>');">
+                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="editProfile('bot-profiles/read/<?php echo e($data->id); ?>',  );">
                     <i class="<?php echo e($action->getIcon()); ?>"></i> 
                     </span>
-                </a> -->
+                </a>
                     <!-- <span class="hidden-xs hidden-sm"><?php echo e($action->getTitle()); ?> -->
-                <span class="icon-stats">
+                <!-- <span class="icon-stats">
                     <span title="<?php echo e($action->getTitle()); ?>"  onclick="loadThread('bot-profiles/read/<?php echo e($data->id); ?>');">
                         <i class="<?php echo e($action->getIcon()); ?>"></i> 
                     </span> 
-                </span>
+                </span> -->
             <?php else: ?>
-                <span class="icon-stats">
+                <a href="#" title="<?php echo e($action->getTitle()); ?>" <?php echo $action->convertAttributesToHtml(); ?> onclick="editProfile('<?php echo e($action->getRoute($dataType->name)); ?>', '<?php echo e($data->id); ?>')">
+                    <i class="<?php echo e($action->getIcon()); ?>"></i> 
+                    </span>
+                </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <!-- <span class="icon-stats">
                     <span  title="<?php echo e($action->getTitle()); ?>" onclick="loadThread('<?php echo e($action->getRoute($dataType->name)); ?>')">
                         <i class="<?php echo e($action->getIcon()); ?>"></i> 
-                    </span> 
-                </span> 
+                    </span>  
+                </span> --> 
             <?php endif; ?>  
             </span>
         <?php endif; ?>
@@ -35,5 +39,4 @@
         <input type="hidden" name="action" value="<?php echo e(get_class($action)); ?>">
         <input type="hidden" name="ids" value="" class="selected_ids">
     </form>
-<?php endif; ?>
-<?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/partials/actions.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/partials/actions.blade.php ENDPATH**/ ?>

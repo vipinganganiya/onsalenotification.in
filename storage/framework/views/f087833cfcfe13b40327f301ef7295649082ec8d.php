@@ -31,8 +31,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="page-content browse container-fluid">
-
+    <div class="page-content browse container-fluid">  
         <?php echo $__env->make('voyager::alerts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <div class="row">
             <div class="col-md-12">
@@ -42,11 +41,14 @@
                             <div class="pull-right d-flex">
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('add', app($dataType->model_name))): ?>
                                     <!-- <?php echo e(route('voyager.'.$dataType->slug.'.create')); ?> -->
-                                    <button class="btn-add-profile" data-toggle="modal" onclick="addProfile();">
+                                    <?php
+                                        $route = route('voyager.bot-profiles.create');
+                                    ?> 
+                                    <button class="btn-add-profile" data-toggle="modal" data-dismiss="modal" onclick="addModel('<?php echo e($route); ?>');">
                                         <i class="voyager-plus"></i> <?php echo e(__('voyager::generic.add_new')); ?>
 
                                     </button>
-                                    <button class="btn-config-profile" data-toggle="modal" data-target="#config_modal">
+                                    <button class="btn-config-profile" data-toggle="modal" data-dismiss="modal" data-target="#config_modal">
                                         <i class="voyager-settings"></i> Config
                                     </button>
                                 <?php endif; ?>
@@ -118,12 +120,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- <div class="panel-group" id="accordion"> -->
-                                    <?php $__empty_1 = true; $__currentLoopData = $dataTypeContent; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                </div> 
+                                <?php $__empty_1 = true; $__currentLoopData = $dataTypeContent; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <div class="panel panel-default data-panel" panel_div_id="<?php echo e($data->id); ?>">
-                                        <div class="panel-heading collapsed" data-iteration="<?php echo e($loop->iteration); ?>"
-                                            href="#collapse<?php echo e($loop->iteration); ?>">
+                                        <div class="panel-heading collapsed" data-iteration="<?php echo e($loop->iteration); ?>" href="#collapse<?php echo e($loop->iteration); ?>">
                                             <div class="panel-title">
                                                 <div class="accordion-toggle flexbox">
                                                     <?php if($showCheckboxColumn): ?>
@@ -137,7 +137,7 @@
                                                             $data->{$row->field} = $data->{$row->field.'_browse'};
                                                         }
                                                         ?>
-                                                         <div class="flexbox-item flexbox-item-<?php echo e(str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name')))); ?>" id="map-tgces-<?php echo e($data->id); ?>">
+                                                         <div class="flexbox-item flexbox-item-<?php echo e(str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name')))); ?> <?php echo e(str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name')))); ?>-<?php echo e($data->id); ?>" id="map-tgces-<?php echo e($data->id); ?>">
                                                             <?php if(isset($row->details->view_browse)): ?>
                                                                 <?php echo $__env->make($row->details->view_browse, ['row' => $row, 'dataType' => $dataType, 'dataTypeContent' => $dataTypeContent, 'content' => $data->{$row->field}, 'view' => 'browse', 'options' => $row->details], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                                             <?php elseif(isset($row->details->view)): ?>
@@ -145,7 +145,7 @@
                                                             <?php elseif($row->type == 'image'): ?>
                                                                 <img src="<?php if( !filter_var($data->{$row->field}, FILTER_VALIDATE_URL)): ?><?php echo e(Voyager::image( $data->{$row->field} )); ?><?php else: ?><?php echo e($data->{$row->field}); ?><?php endif; ?>" style="width:100px">
                                                             <?php elseif($row->type == 'relationship'): ?>
-                                                                <?php echo $__env->make('voyager::formfields.relationship', ['view' => 'browse','options' => $row->details], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                                                <?php echo $__env->make('voyager::formfields.relationship', ['view' => 'read','options' => $row->details], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                                             <?php elseif($row->type == 'select_multiple'): ?>
                                                                 <?php if(property_exists($row->details, 'relationship')): ?>
 
@@ -209,7 +209,8 @@
                                                                 <span class="badge badge-lg" style="background-color: <?php echo e($data->{$row->field}); ?>"><?php echo e($data->{$row->field}); ?></span>
                                                             <?php elseif($row->type == 'text'): ?>
                                                                 <?php echo $__env->make('voyager::multilingual.input-hidden-bread-browse', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                                                                <div><?php echo e(mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field}); ?></div>
+                                                               <?php echo e(mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field}); ?>
+
                                                             <?php elseif($row->type == 'text_area'): ?>
                                                                 <?php echo $__env->make('voyager::multilingual.input-hidden-bread-browse', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                                                 <div><?php echo e(mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field}); ?></div>
@@ -286,7 +287,10 @@
                                                             <?php endif; ?>
                                                         </div>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                     <div class="flexbox-item flexbox-item-action arrow-1" id="map-tgces-<?php echo e($data->id); ?>">
+                                                    <div class="flexbox-item flexbox-item-thread-input" id="map-tgces-<?php echo e($data->id); ?>" style="text-align: center;">
+                                                        <input type="text" name="thread_input" id="thread_input_<?php echo e($data->id); ?>" style="color: #000; line-height: normal !important; width: 25px;" />
+                                                    </div>
+                                                    <div class="flexbox-item flexbox-item-action arrow-1" id="map-tgces-<?php echo e($data->id); ?>">
                                                         <?php $__currentLoopData = $actions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $action): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <?php if(!method_exists($action, 'massAction')): ?>
                                                                 <?php echo $__env->make('voyager::bot-profiles.partials.actions', ['action' => $action], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -297,7 +301,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <div class="panel panel-default panel-empty">
                                         <div class="panel-heading">
                                             <div class="panel-title">
@@ -305,8 +309,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php endif; ?>
-                                <!-- </div>  -->
+                                <?php endif; ?> 
                             </div>
                         </div>
                         <?php if($isServerSide): ?>
@@ -338,7 +341,7 @@
 
     
     <div class="modal fade modal-info in" id="config_modal">
-        <div class="modal-dialog" style="width: 90%;">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -351,26 +354,42 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-machine">
-                                            <a>Add Machine</a>
+                                        <span class="master-table machine"> 
+                                            <a onclick="showOthers(' <?php echo e(route("voyager.bot-machines.index")); ?>')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/ios/50/gears--v1.png" alt="Machine" title="Machine" />
+                                            </a>
+                                            <br />
+                                            <b>Machine</b> 
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-proxy">
-                                            <a>Add Proxy</a>
+                                        <span class="master-table proxy">
+                                            <a onclick="showOthers(' <?php echo e(route("voyager.bot-proxies.index")); ?>')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/external-solidglyph-m-oki-orlando/64/external-proxy-information-technology-solid-solidglyph-m-oki-orlando.png" alt="Proxy" title="Proxy" />
+                                            </a>
+                                            <br />
+                                            <b>Proxy</b>
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-login">
-                                            <a>Add Login</a>
+                                        <span class="master-table login">
+                                            <a onclick="showOthers(' <?php echo e(route("voyager.bot-logins.index")); ?>')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/ios/50/enter-2.png" alt="Login" title="Login" />
+                                            </a>
+                                            <br />
+                                            <b>Login</b>
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-club">
-                                            <a>Add Club</a>
+                                        <span class="master-table club">
+                                            <a onclick="showOthers(' <?php echo e(route("voyager.bot-clubs.index")); ?>')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="48" height="48" src="https://img.icons8.com/external-those-icons-lineal-those-icons/48/external-Card-casino-and-leisure-those-icons-lineal-those-icons-2.png" alt="Club" title="Club" />
+                                            </a>
+                                            <br />
+                                            <a>Club</a>
                                         </span>   
                                     </div>
                                 </div>
@@ -378,15 +397,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger view quote_cancel_btn" data-dismiss="modal">Close</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
     
-    <div class="modal fade modal-info event_detail_modal in" id="loadData" style="padding-right: 17px;">
+    <div class="modal fade modal-info event_detail_modal in" id="loadData" style="padding-right: 17px;" role="bot-mgt">
 
     </div>
 
@@ -504,12 +523,11 @@
             $('.selected_ids').val(ids);
         });
 
-        function addProfile() {
+        function addModel(slug) {   
             $.ajax({
-                url: <?php echo json_encode(route('voyager.'.$dataType->slug.'.create') , 15, 512) ?>,
+                url:slug,
                 type: "get",
                 success: function(res) {
-                   console.log(res);
                    $("#loadData").html(res);
                    $('#loadData').modal('show');
                 },
@@ -521,15 +539,29 @@
                 }
             });
         }
-        function loadThread(url) {
-            console.log(url);
+        function editProfile(url, id) { 
+            var thread_input = $("#thread_input_"+id).val();
+            console.log(thread_input);
             $.ajax({
                 url: url,
                 type: "get",
+                data: {'thread_input':thread_input},
                 success: function(res) {
-                   console.log(res);
-                   $("#loadData").html(res);
-                   $('#loadData').modal('show');
+
+                    if (res.id) {
+                        toastr.success(res.msg, 'Success');
+
+                        $("#thread_input_"+res.id).val('');
+                        if(res.type=='start') { 
+                            console.log("#running-threads-"+res.id);
+                            $(".running-threads-"+res.id).text(res.thread_input);
+                        }
+
+                    } else { 
+                       $("#loadData").html(res);
+                       $('#loadData').modal('show'); 
+                    }
+                  
                 },
                 error: function() {
                     toastr.error('Something went wrong', 'Error');
@@ -539,6 +571,41 @@
                 }
             });
         }
+        function showOthers(url) { 
+            console.log(url);  
+            $.ajax({
+                url: url,
+                type: "get", 
+                success: function(res) {
+                   $("#loadData").html(res);
+                   $('#config_modal').modal('hide');  
+                   $('#loadData').modal('show');  
+                  
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
+        }
+        <?php if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-machines-listing"): ?>
+            showOthers(<?php echo json_encode(route('voyager.bot-machines.index') , 15, 512) ?>);
+        <?php endif; ?>
+
+        <?php if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-clubs-listing"): ?>
+            showOthers(<?php echo json_encode(route('voyager.bot-clubs.index') , 15, 512) ?>);
+            //toastr.success('Bot Machine is added successfully', 'Success');
+        <?php endif; ?>
+
+        <?php if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-logins-listing"): ?>
+            showOthers(<?php echo json_encode(route('voyager.bot-logins.index') , 15, 512) ?>); 
+        <?php endif; ?>
+        // <?php if(count($errors) > 0): ?>
+        //     showOthers(<?php echo json_encode(route('clubs-bot.create') , 15, 512) ?>); 
+            
+        // <?php endif; ?>
     </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('voyager::master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/adddepot/public_html/resources/views/vendor/voyager/bot-profiles/browse.blade.php ENDPATH**/ ?>

@@ -111,4 +111,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="http://onsalenotification.in/admin/voyager-assets?path=js%2Fapp.js"></script>
+<script type="text/javascript" src="https://adddepot.co/admin/voyager-assets?path=js%2Fapp.js"></script>

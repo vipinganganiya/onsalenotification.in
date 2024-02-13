@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Voyager::addAction(\App\Actions\SocketAction::class);
+        Voyager::addAction(\App\Actions\StartMachineAction::class);
+        Voyager::addAction(\App\Actions\StopMachineAction::class);
     }
 }

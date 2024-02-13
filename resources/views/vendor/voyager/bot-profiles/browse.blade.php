@@ -32,8 +32,7 @@
 @stop
 
 @section('content')
-    <div class="page-content browse container-fluid">
-
+    <div class="page-content browse container-fluid">  
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
@@ -43,10 +42,13 @@
                             <div class="pull-right d-flex">
                                 @can('add', app($dataType->model_name))
                                     <!-- {{ route('voyager.'.$dataType->slug.'.create') }} -->
-                                    <button class="btn-add-profile" data-toggle="modal" onclick="addProfile();">
+                                    @php
+                                        $route = route('voyager.bot-profiles.create');
+                                    @endphp 
+                                    <button class="btn-add-profile" data-toggle="modal" data-dismiss="modal" onclick="addModel('{{$route}}');">
                                         <i class="voyager-plus"></i> {{ __('voyager::generic.add_new') }}
                                     </button>
-                                    <button class="btn-config-profile" data-toggle="modal" data-target="#config_modal">
+                                    <button class="btn-config-profile" data-toggle="modal" data-dismiss="modal" data-target="#config_modal">
                                         <i class="voyager-settings"></i> Config
                                     </button>
                                 @endcan
@@ -117,12 +119,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- <div class="panel-group" id="accordion"> -->
-                                    @forelse($dataTypeContent as $data)
+                                </div> 
+                                @forelse($dataTypeContent as $data)
                                     <div class="panel panel-default data-panel" panel_div_id="{{ $data->id }}">
-                                        <div class="panel-heading collapsed" data-iteration="{{ $loop->iteration }}"
-                                            href="#collapse{{ $loop->iteration }}">
+                                        <div class="panel-heading collapsed" data-iteration="{{ $loop->iteration }}" href="#collapse{{ $loop->iteration }}">
                                             <div class="panel-title">
                                                 <div class="accordion-toggle flexbox">
                                                     @if($showCheckboxColumn)
@@ -136,7 +136,7 @@
                                                             $data->{$row->field} = $data->{$row->field.'_browse'};
                                                         }
                                                         @endphp
-                                                         <div class="flexbox-item flexbox-item-{{ str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name'))) }}" id="map-tgces-{{ $data->id }}">
+                                                         <div class="flexbox-item flexbox-item-{{ str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name'))) }} {{ str_replace(' ', '-', strtolower($row->getTranslatedAttribute('display_name'))) }}-{{$data->id}}" id="map-tgces-{{ $data->id }}">
                                                             @if (isset($row->details->view_browse))
                                                                 @include($row->details->view_browse, ['row' => $row, 'dataType' => $dataType, 'dataTypeContent' => $dataTypeContent, 'content' => $data->{$row->field}, 'view' => 'browse', 'options' => $row->details])
                                                             @elseif (isset($row->details->view))
@@ -144,7 +144,7 @@
                                                             @elseif($row->type == 'image')
                                                                 <img src="@if( !filter_var($data->{$row->field}, FILTER_VALIDATE_URL)){{ Voyager::image( $data->{$row->field} ) }}@else{{ $data->{$row->field} }}@endif" style="width:100px">
                                                             @elseif($row->type == 'relationship')
-                                                                @include('voyager::formfields.relationship', ['view' => 'browse','options' => $row->details])
+                                                                @include('voyager::formfields.relationship', ['view' => 'read','options' => $row->details])
                                                             @elseif($row->type == 'select_multiple')
                                                                 @if(property_exists($row->details, 'relationship'))
 
@@ -199,7 +199,7 @@
                                                                 <span class="badge badge-lg" style="background-color: {{ $data->{$row->field} }}">{{ $data->{$row->field} }}</span>
                                                             @elseif($row->type == 'text')
                                                                 @include('voyager::multilingual.input-hidden-bread-browse')
-                                                                <div>{{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}</div>
+                                                               {{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}
                                                             @elseif($row->type == 'text_area')
                                                                 @include('voyager::multilingual.input-hidden-bread-browse')
                                                                 <div>{{ mb_strlen( $data->{$row->field} ) > 200 ? mb_substr($data->{$row->field}, 0, 200) . ' ...' : $data->{$row->field} }}</div>
@@ -270,7 +270,10 @@
                                                             @endif
                                                         </div>
                                                     @endforeach
-                                                     <div class="flexbox-item flexbox-item-action arrow-1" id="map-tgces-{{ $data->id }}">
+                                                    <div class="flexbox-item flexbox-item-thread-input" id="map-tgces-{{ $data->id }}" style="text-align: center;">
+                                                        <input type="text" name="thread_input" id="thread_input_{{$data->id}}" style="color: #000; line-height: normal !important; width: 25px;" />
+                                                    </div>
+                                                    <div class="flexbox-item flexbox-item-action arrow-1" id="map-tgces-{{ $data->id }}">
                                                         @foreach($actions as $action)
                                                             @if (!method_exists($action, 'massAction'))
                                                                 @include('voyager::bot-profiles.partials.actions', ['action' => $action])
@@ -281,7 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                     @empty
+                                @empty
                                     <div class="panel panel-default panel-empty">
                                         <div class="panel-heading">
                                             <div class="panel-title">
@@ -289,8 +292,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endforelse
-                                <!-- </div>  -->
+                                @endforelse 
                             </div>
                         </div>
                         @if ($isServerSide)
@@ -321,7 +323,7 @@
 
     {{-- Config Model --}}
     <div class="modal fade modal-info in" id="config_modal">
-        <div class="modal-dialog" style="width: 90%;">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -334,26 +336,42 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-machine">
-                                            <a>Add Machine</a>
+                                        <span class="master-table machine"> 
+                                            <a onclick="showOthers(' {{route("voyager.bot-machines.index") }}')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/ios/50/gears--v1.png" alt="Machine" title="Machine" />
+                                            </a>
+                                            <br />
+                                            <b>Machine</b> 
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-proxy">
-                                            <a>Add Proxy</a>
+                                        <span class="master-table proxy">
+                                            <a onclick="showOthers(' {{route("voyager.bot-proxies.index") }}')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/external-solidglyph-m-oki-orlando/64/external-proxy-information-technology-solid-solidglyph-m-oki-orlando.png" alt="Proxy" title="Proxy" />
+                                            </a>
+                                            <br />
+                                            <b>Proxy</b>
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-login">
-                                            <a>Add Login</a>
+                                        <span class="master-table login">
+                                            <a onclick="showOthers(' {{route("voyager.bot-logins.index") }}')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="50" height="50" src="https://img.icons8.com/ios/50/enter-2.png" alt="Login" title="Login" />
+                                            </a>
+                                            <br />
+                                            <b>Login</b>
                                         </span>
                                     </div>
 
                                     <div class="col-sm-2 col-add">
-                                        <span class="master-table add-club">
-                                            <a>Add Club</a>
+                                        <span class="master-table club">
+                                            <a onclick="showOthers(' {{route("voyager.bot-clubs.index") }}')" data-dismiss="modal" aria-hidden="true">
+                                                <img width="48" height="48" src="https://img.icons8.com/external-those-icons-lineal-those-icons/48/external-Card-casino-and-leisure-those-icons-lineal-those-icons-2.png" alt="Club" title="Club" />
+                                            </a>
+                                            <br />
+                                            <a>Club</a>
                                         </span>   
                                     </div>
                                 </div>
@@ -361,15 +379,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger view quote_cancel_btn" data-dismiss="modal">Close</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
     {{-- Config Model --}}
-    <div class="modal fade modal-info event_detail_modal in" id="loadData" style="padding-right: 17px;">
+    <div class="modal fade modal-info event_detail_modal in" id="loadData" style="padding-right: 17px;" role="bot-mgt">
 
     </div>
 
@@ -485,12 +503,11 @@
             $('.selected_ids').val(ids);
         });
 
-        function addProfile() {
+        function addModel(slug) {   
             $.ajax({
-                url: @json(route('voyager.'.$dataType->slug.'.create') ),
+                url:slug,
                 type: "get",
                 success: function(res) {
-                   console.log(res);
                    $("#loadData").html(res);
                    $('#loadData').modal('show');
                 },
@@ -502,15 +519,29 @@
                 }
             });
         }
-        function loadThread(url) {
-            console.log(url);
+        function editProfile(url, id) { 
+            var thread_input = $("#thread_input_"+id).val();
+            console.log(thread_input);
             $.ajax({
                 url: url,
                 type: "get",
+                data: {'thread_input':thread_input},
                 success: function(res) {
-                   console.log(res);
-                   $("#loadData").html(res);
-                   $('#loadData').modal('show');
+
+                    if (res.id) {
+                        toastr.success(res.msg, 'Success');
+
+                        $("#thread_input_"+res.id).val('');
+                        if(res.type=='start') { 
+                            console.log("#running-threads-"+res.id);
+                            $(".running-threads-"+res.id).text(res.thread_input);
+                        }
+
+                    } else { 
+                       $("#loadData").html(res);
+                       $('#loadData').modal('show'); 
+                    }
+                  
                 },
                 error: function() {
                     toastr.error('Something went wrong', 'Error');
@@ -520,5 +551,40 @@
                 }
             });
         }
+        function showOthers(url) { 
+            console.log(url);  
+            $.ajax({
+                url: url,
+                type: "get", 
+                success: function(res) {
+                   $("#loadData").html(res);
+                   $('#config_modal').modal('hide');  
+                   $('#loadData').modal('show');  
+                  
+                },
+                error: function() {
+                    toastr.error('Something went wrong', 'Error');
+                },
+                complete: function() {
+                    
+                }
+            });
+        }
+        @if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-machines-listing")
+            showOthers(@json(route('voyager.bot-machines.index') ));
+        @endif
+
+        @if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-clubs-listing")
+            showOthers(@json(route('voyager.bot-clubs.index') ));
+            //toastr.success('Bot Machine is added successfully', 'Success');
+        @endif
+
+        @if(!empty(Session::get('popup')) && Session::get('popup')  == "bot-logins-listing")
+            showOthers(@json(route('voyager.bot-logins.index') )); 
+        @endif
+        // @if (count($errors) > 0)
+        //     showOthers(@json(route('clubs-bot.create') )); 
+            
+        // @endif
     </script>
 @stop

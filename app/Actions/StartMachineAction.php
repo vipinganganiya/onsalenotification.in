@@ -4,25 +4,25 @@ namespace App\Actions;
 
 use TCG\Voyager\Actions\AbstractAction;
 
-class SocketAction extends AbstractAction
+class StartMachineAction extends AbstractAction
 {
     public function getTitle()
     {
         // Action title which display in button based on current status
-        return $this->data->{'status'}=="1"?'stop':'start';
+        return 'Start';
     }
 
     public function getIcon()
     {
         // Action icon which display in left of button based on current status
-        return $this->data->{'status'}=="1"?'voyager-x':'voyager-external';
+        return 'voyager-power';
     }
 
     public function getAttributes()
     {
         // Action button class
         return [
-            'class' => 'btn btn-sm btn-primary pull-left',
+            'class' => 'btn btn-sm btn-success pull-left view',
         ];
     }
 
@@ -35,6 +35,6 @@ class SocketAction extends AbstractAction
     public function getDefaultRoute()
     {
         // URL for action button when click
-        return route('overview.socket', array("id"=>$this->data->{$this->data->getKeyName()}));
+        return route('socket.start', array("id"=>$this->data->{$this->data->getKeyName()}));
     }
 }
